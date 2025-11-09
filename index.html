@@ -4,46 +4,68 @@
     <meta charset="UTF-8">
     <title>我的 GitHub Page</title>
     <style>
-        body { font-family: "標楷體", serif; text-align: center; margin-top: 50px; background-color: #f4f4f4; }
+        body { 
+            font-family: "標楷體", serif; 
+            text-align: center; 
+            margin-top: 50px; 
+            background-color: #f4f4f4; 
+        }
         h1 { color: #2c3e50; }
-        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
-        #info { display: none; margin-top: 20px; }
+        button { 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            margin: 10px; 
+            background-color: #3498db; 
+            color: white; 
+            border: none; 
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #2980b9; }
+        #profile { 
+            display: none; 
+            margin-top: 30px; 
+            background-color: #fff; 
+            border-radius: 10px; 
+            padding: 20px; 
+            width: 300px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+        }
         img { border-radius: 10px; margin-top: 10px; }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>歡迎來到我的 GitHub Page</h1>
-    <p>這是一個簡單的範例頁面，使用 HTML、CSS 與 jQuery。</p>
+    <h1>歡迎來到我的 GitHub Page 🎉</h1>
+    <p>這是我在 FreeCodeCamp 學習的成果展示，包含 HTML、CSS、jQuery 與 AJAX 技術！</p>
 
-    <button id="showEffect">顯示／隱藏問候語 (特效)</button>
-    <button id="loadData">載入我的 GitHub 資訊 (AJAX)</button>
-
-    <div id="info"></div>
+    <button id="loadGitHub">載入我的 GitHub 資料</button>
+    <div id="profile"></div>
 
     <script>
         $(document).ready(function(){
 
-            // 🎬 jQuery 特效功能
-            $("#showEffect").click(function(){
-                $("p").fadeToggle(800);
-            });
+            $("#loadGitHub").click(function(){
 
-            // 🌐 jQuery AJAX 功能
-            $("#loadData").click(function(){
+                // 清空舊資料並顯示載入中提示
+                $("#profile").hide().html("<p>正在載入資料中...</p>").fadeIn(300);
+
+                // 發送 AJAX 請求到 GitHub API
                 $.ajax({
-                    url: "https://api.github.com/users/ian7ko-droid", // <-- 改成你的 GitHub 帳號
+                    url: "https://api.github.com/users/ian7ko-droid", // ⚠️ 改成你的 GitHub 帳號
                     method: "GET",
                     success: function(data){
-                        $("#info").html(`
-                            <h3>我的 GitHub 資訊：</h3>
-                            <p><strong>帳號：</strong> ${data.login}</p>
-                            <p><strong>公開 Repo：</strong> ${data.public_repos}</p>
-                            <img src="${data.avatar_url}" width="120">
-                        `).fadeIn(800);
+                        $("#profile").hide().html(`
+                            <h3>👤 ${data.login}</h3>
+                            <img src="${data.avatar_url}" width="100">
+                            <p>📦 公開 Repo 數：${data.public_repos}</p>
+                            <p>🌐 網站：<a href="${data.html_url}" target="_blank">${data.html_url}</a></p>
+                        `).slideDown(800);
                     },
                     error: function(){
-                        $("#info").html("<p>載入失敗，請稍後再試。</p>").fadeIn(500);
+                        $("#profile").html("<p style='color:red;'>❌ 無法載入資料，請稍後再試。</p>");
                     }
                 });
             });
