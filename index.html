@@ -4,22 +4,50 @@
     <meta charset="UTF-8">
     <title>我的 GitHub Page</title>
     <style>
-        body { font-family: "標楷體", serif; text-align: center; margin-top: 50px; }
+        body { font-family: "標楷體", serif; text-align: center; margin-top: 50px; background-color: #f4f4f4; }
         h1 { color: #2c3e50; }
-        button { padding: 10px 20px; font-size: 16px; }
+        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+        #info { display: none; margin-top: 20px; }
+        img { border-radius: 10px; margin-top: 10px; }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>歡迎來到我的 GitHub Page</h1>
     <p>這是一個簡單的範例頁面，使用 HTML、CSS 與 jQuery。</p>
-    <button id="clickMe">點我！</button>
+
+    <button id="showEffect">顯示／隱藏問候語 (特效)</button>
+    <button id="loadData">載入我的 GitHub 資訊 (AJAX)</button>
+
+    <div id="info"></div>
 
     <script>
         $(document).ready(function(){
-            $("#clickMe").click(function(){
-                alert("你點了按鈕！");
+
+            // 🎬 jQuery 特效功能
+            $("#showEffect").click(function(){
+                $("p").fadeToggle(800);
             });
+
+            // 🌐 jQuery AJAX 功能
+            $("#loadData").click(function(){
+                $.ajax({
+                    url: "https://api.github.com/users/ian7ko_droid", // <-- 改成你的 GitHub 帳號
+                    method: "GET",
+                    success: function(data){
+                        $("#info").html(`
+                            <h3>我的 GitHub 資訊：</h3>
+                            <p><strong>帳號：</strong> ${data.login}</p>
+                            <p><strong>公開 Repo：</strong> ${data.public_repos}</p>
+                            <img src="${data.avatar_url}" width="120">
+                        `).fadeIn(800);
+                    },
+                    error: function(){
+                        $("#info").html("<p>載入失敗，請稍後再試。</p>").fadeIn(500);
+                    }
+                });
+            });
+
         });
     </script>
 </body>
